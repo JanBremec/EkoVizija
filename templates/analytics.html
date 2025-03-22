@@ -1,0 +1,46 @@
+<!-- templates/analytics.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EkoVizija Analytics</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+
+    <!-- Modern Navbar -->
+    <nav class="modern-navbar">
+        <div class="navbar-content">
+            <div class="navbar-left">
+                <h1 class="brand-title">EkoVizija</h1>
+                <div class="nav-buttons">
+                    <a href="/" class="nav-button">Dashboard</a>
+                    <a href="/analytics" class="nav-button active">Analytics</a>
+                    <a href="/reports" class="nav-button">Reports</a>
+                    <a href="/settings" class="nav-button">Settings</a>
+                </div>
+            </div>
+            <div class="navbar-right">
+                <button class="theme-toggle">Dark Mode</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="page-content">
+        <h2>Analytics Dashboard</h2>
+        <div class="analytics-section">
+            <div class="analytics-card">
+                <h3>Real-Time Metrics</h3>
+                <p>Sample analytics data</p>
+                <button class="analytics-button">Refresh Data</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://kit.fontawesome.com/your-kit-id.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

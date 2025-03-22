@@ -1,0 +1,32 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+env/
+
+# PyCharm specific files
+.idea/
+*.iml
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Logs and temporary files
+*.log
+*.tmp
+
+# Test and coverage reports
+htmlcov/
+.coverage
+.pytest_cache/
+
+# Jupyter Notebooks checkpoints (if you use them)
+.ipynb_checkpoints/
+
+# Ignore environment files
+.env
+*.env
