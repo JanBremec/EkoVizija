@@ -8,6 +8,8 @@ najprej se povezes prek ssh
 
 ko prides notr:
 
+ostnovni ukazi za terminal delujejo isto
+
 ### Za nalaganje novih knjiznic iz environment:
 najprej nalozi python in zazeni environment:
 ```
