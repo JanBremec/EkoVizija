@@ -6,7 +6,10 @@
 #SBATCH --nodes=1
 #SBATCH --time=4-00:00:00
 #SBATCH --gpus=1
+#SBATCH --export=ALL
 
-pip install -r requirements.txt
-srun python3 ./images/image_fetcher.py
-srun python3 ./models/model1.py
+module load Python
+source /d/hpc/home/hackathon17/DigiVizija_env/bin/activate
+cd images
+srun python3 image_fetcher.py
+

@@ -2,6 +2,8 @@ from oauthlib.oauth2 import BackendApplicationClient
 from requests_oauthlib import OAuth2Session
 from PIL import Image
 from io import BytesIO
+import os
+from dotenv import load_dotenv
 
 
 class SentinelImageFetcher:
@@ -124,17 +126,22 @@ class SentinelImageFetcher:
         :param image_content: The binary content of the image
         :param year: The year corresponding to the image
         """
+
+        folder_path = "../satellite_images"
         file_path = f"output_image_{year}.jpg"
+        file_path = folder_path + "/" + file_path
         image_data = BytesIO(image_content)
         image = Image.open(image_data)
         image.save(file_path)
         print(f"Image for year {year} saved successfully at {file_path}")
 
+# Load environment variables from .env file
+load_dotenv()
 
 # Example usage
 if __name__ == "__main__":
-    CLIENT_ID = "CLIENT_ID"
-    CLIENT_SECRET = "CLIENT_SECRET"
+    CLIENT_ID = os.getenv("CLIENT_ID")
+    CLIENT_SECRET = os.getenv("CLIENT_SECRET")
 
     fetcher = SentinelImageFetcher(CLIENT_ID, CLIENT_SECRET)
     fetcher.generate_images_for_years(2015, 2025)
