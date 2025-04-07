@@ -1,18 +1,29 @@
 <!-- templates/base.html -->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EkoVizija Dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.2.0/leaflet.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.2.0/leaflet.js"></script>
+
 </head>
+
 <body>
     <!-- Background Map -->
-    <div class="background-map">
-<iframe width="100%" height="600" frameborder="0" scrolling="no" scrollwheel: false, marginheight="0" marginwidth="0" src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=1%20Grafton%20Street,%20Dublin,%20Ireland+(My%20Business%20Name)&amp;t=k&amp;z=14&amp;ie=UTF8&amp;output=embed"></iframe>
+    <!-- <div class="background-map">
+        <iframe width="100%" height="600" frameborder="0" scrolling="no" scrollwheel: false, marginheight="0"
+            marginwidth="0"
+            src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=1%20Grafton%20Street,%20Dublin,%20Ireland+(My%20Business%20Name)&amp;t=k&amp;z=14&amp;ie=UTF8&amp;output=embed"></iframe>
         </iframe>
-    </div>
+    </div> -->
+
+    
+    <div class="background-map" id="copernicusMap"></div>
+
 
     <!-- Modern Navbar -->
     <nav class="modern-navbar">
@@ -21,9 +32,12 @@
                 <h1 class="brand-title">EkoVizija</h1>
                 <div class="nav-buttons">
                     <a href="/" class="nav-button {{ 'active' if request.path == '/' else '' }}">Dashboard</a>
-                    <a href="/analytics" class="nav-button {{ 'active' if request.path == '/analytics' else '' }}">Analytics</a>
-                    <a href="/reports" class="nav-button {{ 'active' if request.path == '/reports' else '' }}">Reports</a>
-                    <a href="/settings" class="nav-button {{ 'active' if request.path == '/settings' else '' }}">Settings</a>
+                    <a href="/analytics"
+                        class="nav-button {{ 'active' if request.path == '/analytics' else '' }}">Analytics</a>
+                    <a href="/reports"
+                        class="nav-button {{ 'active' if request.path == '/reports' else '' }}">Reports</a>
+                    <a href="/settings"
+                        class="nav-button {{ 'active' if request.path == '/settings' else '' }}">Settings</a>
                 </div>
             </div>
             <div class="navbar-right">
@@ -38,68 +52,92 @@
     </div>
 
     <!-- Sidebars -->
-    <div class="left-sidebar">
-        <!-- Sidebar content as before -->
+
+    <!-- Left Sidebar -->
+    <!-- <div class="left-sidebar">
         <div class="sidebar-header">
             <h3>Quick Access</h3>
             <button class="toggle-button">☰</button>
         </div>
-
-        <div class="sidebar-section">
-            <h4>Navigation</h4>
-            <ul>
-                <li><a href="#"><i class="fas fa-home"></i> Dashboard</a></li>
-                <li><a href="#"><i class="fas fa-chart-line"></i> Analytics</a></li>
-                <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
-            </ul>
+        <div class="sidebar-content">
+            <div class="sidebar-section">
+                <h4>Navigation</h4>
+                <ul>
+                    <li><a href="#"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="#"><i class="fas fa-chart-line"></i> Analytics</a></li>
+                    <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                </ul>
+            </div>
+            <div class="sidebar-section">
+                <h4>Quick Actions</h4>
+                <button class="sidebar-button">New Project</button>
+                <button class="sidebar-button">Generate Report</button>
+            </div>
         </div>
-
-        <div class="sidebar-section">
-            <h4>Quick Actions</h4>
-            <button class="sidebar-button">New Project</button>
-            <button class="sidebar-button">Generate Report</button>
-        </div>
-    </div>
+    </div> -->
 
     <!-- Right Sidebar -->
-    <div class="right-sidebar">
-        <!-- Sidebar content as before -->
+    <!-- <div class="right-sidebar">
         <div class="sidebar-header">
             <h3>Notifications</h3>
             <button class="toggle-button">☰</button>
         </div>
-
-        <div class="notification-card">
-            <div class="card-header">
-                <i class="fas fa-bell"></i>
-                <span>3 New Alerts</span>
+        <div class="sidebar-content">
+            <div class="notification-card">
+                <div class="card-header">
+                    <i class="fas fa-bell"></i>
+                    <span>3 New Alerts</span>
+                </div>
+                <div class="card-content">
+                    <p>System update available</p>
+                    <p>New user registered</p>
+                    <p>Backup completed</p>
+                </div>
             </div>
-            <div class="card-content">
-                <p>System update available</p>
-                <p>New user registered</p>
-                <p>Backup completed</p>
-            </div>
-        </div>
-
-        <div class="sidebar-section">
-            <h4>Quick Stats</h4>
-            <div class="stat-card">
-                <i class="fas fa-users"></i>
-                <div class="stat-content">
-                    <h5>Active Users</h5>
-                    <p>1,234</p>
+            <div class="sidebar-section">
+                <h4>Quick Stats</h4>
+                <div class="stat-card">
+                    <i class="fas fa-users"></i>
+                    <div class="stat-content">
+                        <h5>Active Users</h5>
+                        <p>1,234</p>
+                    </div>
                 </div>
             </div>
         </div>
+    </div> -->
+
+    <div class="drawing-mode-toggle">
+        <label>
+            <input type="checkbox" id="drawingModeToggle">
+            Enable Drawing Mode
+        </label>
+        <label>
+            <input type="radio" name="colorMode" id="forest" value="green">
+            Forest
+        </label>
+        <label>
+            <input type="radio" name="colorMode" id="city" value="red" checked>
+            City
+        </label>
+        <label>
+            <input type="radio" name="colorMode" id="clearColor" value="clear">
+            Clear Color
+        </label>
     </div>
 
+    <!-- button for sending data of colored area to the backend for prediction -->
+    <button id="predictButton" class="predict-button">Napovej!</button>
+
     <!-- Draggable Bottom Panel -->
-
-
     <div id="panel">This is the sliding panel!</div>
 
     <button id="arrow">▲</button>
-    <script src="https://kit.fontawesome.com/your-kit-id.js"></script>
+    <script src="https://kit.fontawesome.com/a904cbc285.js"></script>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+
+    <script src="{{ url_for('static', filename='map_control.js') }}"></script>
 </body>
+
 </html>

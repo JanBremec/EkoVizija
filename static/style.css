@@ -23,17 +23,18 @@ body {
 }
 
 /* Sidebars */
-.left-sidebar, .right-sidebar {
+.left-sidebar,
+.right-sidebar {
     position: fixed;
     top: 80px;
     /* height: 80% !important;     REWORK!!! */
     padding: 20px;
-    background: rgba(255,255,255,0.75);
+    background: rgba(255, 255, 255, 0.75);
     border-radius: 15px;
     box-shadow:
-        0 8px 15px rgba(0,0,0,0.1),
-        0 5px 10px rgba(0,0,0,0.05),
-        inset 0 0 0 1px rgba(255,255,255,0.3);
+        0 8px 15px rgba(0, 0, 0, 0.1),
+        0 5px 10px rgba(0, 0, 0, 0.05),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.3);
     z-index: 1;
     backdrop-filter: blur(5px);
 }
@@ -113,7 +114,7 @@ body {
 
 .sidebar-button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* Right Sidebar Content */
@@ -123,8 +124,8 @@ body {
     padding: 15px;
     margin-bottom: 20px;
     box-shadow:
-        0 4px 8px rgba(0,0,0,0.05),
-        0 2px 4px rgba(0,0,0,0.03);
+        0 4px 8px rgba(0, 0, 0, 0.05),
+        0 2px 4px rgba(0, 0, 0, 0.03);
 }
 
 .card-header {
@@ -174,11 +175,11 @@ body {
     top: 0;
     width: 100%;
     height: 40px;
-    background: rgba(255,255,255,0.55);
+    background: rgba(255, 255, 255, 0.55);
     border-radius: 0 0 15px 15px;
     box-shadow:
-        0 4px 8px rgba(0,0,0,0.05),
-        0 2px 4px rgba(0,0,0,0.03);
+        0 4px 8px rgba(0, 0, 0, 0.05),
+        0 2px 4px rgba(0, 0, 0, 0.03);
     z-index: 2;
     backdrop-filter: blur(5px);
 }
@@ -188,11 +189,11 @@ body {
     top: 0;
     width: 100%;
     height: 60px;
-    background: rgba(255,255,255,0.85);
+    background: rgba(255, 255, 255, 0.85);
     border-radius: 0 0 15px 15px;
     box-shadow:
-        0 4px 8px rgba(0,0,0,0.05),
-        0 2px 4px rgba(0,0,0,0.03);
+        0 4px 8px rgba(0, 0, 0, 0.05),
+        0 2px 4px rgba(0, 0, 0, 0.03);
     z-index: 2;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
@@ -290,39 +291,44 @@ body {
 
 .navbar-button:hover {
     transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Page Content */
 .page-content {
     margin: 80px 20px 20px 20px;
     padding: 20px;
+    padding-top: 80px;
     max-width: 1200px;
     margin: 0 auto;
 }
 
 .page-container {
-    background: rgba(255,255,255,0.95);
+    background: rgba(255, 255, 255, 0.95);
     border-radius: 15px;
     padding: 30px;
     box-shadow:
-        0 8px 15px rgba(0,0,0,0.1),
-        0 5px 10px rgba(0,0,0,0.05);
+        0 8px 15px rgba(0, 0, 0, 0.1),
+        0 5px 10px rgba(0, 0, 0, 0.05);
     backdrop-filter: blur(5px);
 }
 
-.analytics-section, .reports-section, .settings-section {
+.analytics-section,
+.reports-section,
+.settings-section {
     margin-bottom: 30px;
 }
 
-.analytics-card, .reports-card, .settings-card {
+.analytics-card,
+.reports-card,
+.settings-card {
     background: white;
     border-radius: 12px;
     padding: 20px;
     margin-bottom: 20px;
     box-shadow:
-        0 4px 8px rgba(0,0,0,0.05),
-        0 2px 4px rgba(0,0,0,0.03);
+        0 4px 8px rgba(0, 0, 0, 0.05),
+        0 2px 4px rgba(0, 0, 0, 0.03);
 }
 
 /* Panel */
@@ -355,4 +361,58 @@ body {
 
 
 
+#copernicusMap {
+    height: calc(100% - 60px); /* Adjust height to account for the navbar (60px) */
+    width: 100%;
+    margin-top: 60px; /* Move the map down by the height of the navbar */
+    float: right;
+}
 
+/* Hide the sidebar content */
+.sidebar-content.collapsed {
+    display: none;
+}
+
+/* Style for the predict button */
+.predict-button {
+    position: fixed; /* Fix the button to a specific position on the screen */
+    bottom: 20px; /* Distance from the bottom of the screen */
+    right: 20px; /* Distance from the right of the screen */
+    background-color: #007bff; /* Blue background */
+    color: white; /* White text */
+    border: none; /* Remove border */
+    padding: 10px 20px; /* Padding for size */
+    font-size: 16px; /* Font size */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a shadow */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth hover effect */
+}
+
+/* Hover effect for the predict button */
+.predict-button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    transform: translateY(-2px); /* Slight lift on hover */
+}
+
+/* Style for the drawing mode toggle container */
+.drawing-mode-toggle {
+    position: fixed;
+    top: 80px; /* Distance from the top of the screen */
+    left: 50px; /* Distance from the right of the screen */
+    background: rgba(255, 255, 255, 0.9); /* Semi-transparent background */
+    padding: 10px 15px; /* Padding around the toggle */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    font-size: 14px; /* Font size for the label */
+    z-index: 1000; /* Ensure it appears above other elements */
+}
+
+/* Style for the toggle switch */
+.drawing-mode-toggle input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: #007bff; /* Change the color of the toggle */
+    margin-left: 10px; /* Add spacing between the label and the toggle */
+}

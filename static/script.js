@@ -3,8 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Toggle sidebar visibility
     document.querySelectorAll('.toggle-button').forEach(button => {
         button.addEventListener('click', () => {
-            const sidebar = button.closest('.left-sidebar, .right-sidebar');
-            sidebar.classList.toggle('collapsed');
+            const sidebarContent = button.closest('.left-sidebar, .right-sidebar').querySelector('.sidebar-content');
+            sidebarContent.classList.toggle('collapsed'); // Toggles the 'collapsed' class
         });
     });
 
