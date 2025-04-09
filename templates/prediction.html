@@ -7,8 +7,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EkoVizija Dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    
+    <!-- leaflet plugins -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.2.0/leaflet.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.2.0/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.2.0/leaflet.js"></script> 
+    <script src="../static/leaflet-side-by-side.js"></script>
 
 </head>
 
@@ -22,7 +25,7 @@
     </div> -->
 
     
-    <div class="background-map" id="copernicusMap"></div>
+    <div class="background-map" id="predictionMap"></div>
 
 
     <!-- Modern Navbar -->
@@ -107,32 +110,9 @@
         </div>
     </div> -->
 
-    <div class="drawing-mode-toggle">
-        <label>
-            <input type="checkbox" id="showHideGridToggle" checked>
-            Show/Hide Grid
-        </label>
-        <label>
-            <input type="checkbox" id="drawingModeToggle">
-            Enable Drawing Mode
-        </label>
-        <label>
-            <input type="radio" name="colorMode" id="forest" value="green">
-            Forest
-        </label>
-        <label>
-            <input type="radio" name="colorMode" id="city" value="red" checked>
-            City
-        </label>
-        <label>
-            <input type="radio" name="colorMode" id="clearColor" value="clear">
-            Eraser
-        </label>
-        <button id="clearButton">Clear</button>
-    </div>
 
-    <!-- button for sending data of colored area to the backend for prediction -->
-    <button id="predictButton" class="predict-button">Napovej!</button>
+    <!-- button for saving the predicted data -->
+    <button id="saveButton" class="predict-button">Shrani rezultat</button>
 
     <!-- Draggable Bottom Panel -->
     <div id="panel">This is the sliding panel!</div>
@@ -142,7 +122,7 @@
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 
 
-    <script src="{{ url_for('static', filename='map_control.js') }}"></script>
+    <script src="{{ url_for('static', filename='prediction_map.js') }}"></script>
 </body>
 
 </html>

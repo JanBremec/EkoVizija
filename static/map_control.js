@@ -58,9 +58,19 @@ L.control.layers(baseMaps, overlayMaps).addTo(map);
 // Create tile grid to draw
 ////////////////////////////////////
 
+var elToColor = {
+    "forest": "green",
+    "city": "red",
+    "clearColor": "#3388ff",
+    "highway": "grey",
+    "crops": "yellow",
+    "factory": "purple",
+};
+
+
 let isDrawingMode = false; // Track whether drawing mode is enabled
 let isMouseDown = false; // Track whether the mouse is pressed
-let currentColor = "red"; // Default color mode
+let currentColor = elToColor["city"]; // Default color mode
 
 // Reset toggle states on page load
 window.addEventListener('load', function () {
@@ -73,7 +83,10 @@ window.addEventListener('load', function () {
     document.getElementById('clearColor').checked = false;
 
     // Reset the currentColor variable to match the default
-    currentColor = "red";
+    currentColor = elToColor["city"];
+
+    showHideGridToggle.checked = true; // Ensure the show checkbox is checked
+    map.addLayer(gridLayer); // Ensure the grid is visible
 });
 
 // Add event listener for the drawing mode toggle
@@ -88,11 +101,11 @@ document.getElementById('drawingModeToggle').addEventListener('change', function
 
 // Add event listeners for color mode toggles
 document.getElementById('forest').addEventListener('change', function () {
-    if (this.checked) currentColor = "green";
+    if (this.checked) currentColor = elToColor["forest"];
 });
 
 document.getElementById('city').addEventListener('change', function () {
-    if (this.checked) currentColor = "red";
+    if (this.checked) currentColor = elToColor["city"];
 });
 
 document.getElementById('clearColor').addEventListener('change', function () {
@@ -113,96 +126,155 @@ map.on('mouseup', function () {
 });
 
 // Colored tiles tracking
-let coloredTiles = new Set(); // Store IDs of colored tiles
+let coloredTiles = new Map(); // Store tile bounds (southWest, northEast) as keys and color as values
 
-// Function to create a grid canvas over Slovenia
-function createGrid(bounds, tileSizeKm) {
-    let grid = [];
-    const earthCircumferenceKm = 40075; // Earth's circumference in kilometers
-    const latStep = tileSizeKm / 111; // 1 degree latitude is approximately 111 km
-    const lngStep = tileSizeKm / (earthCircumferenceKm * Math.cos((bounds.getNorth() + bounds.getSouth()) / 2 * Math.PI / 180) / 360); // Adjust for longitude
+// Create a layer group for the grid
+let gridLayer = L.layerGroup(); // This will hold all the rectangles
 
-    for (let lat = bounds.getSouth(); lat < bounds.getNorth(); lat += latStep) {
-        for (let lng = bounds.getWest(); lng < bounds.getEast(); lng += lngStep) {
-            let southWest = [lat, lng];
-            let northEast = [lat + latStep, lng + lngStep];
-            let rect = L.rectangle([southWest, northEast], {
-                color: "#3388ff",
-                weight: 1,
-                fillOpacity: 0.2
-            });
+//////////////////////////////
+// Fetch and Render Predefined Grid
+//////////////////////////////
 
-            // Add mouseover event for drawing mode
-            rect.on('mouseover', function () {
-                if (isDrawingMode && isMouseDown) {
-                    let tileBounds = { southWest, northEast }; // Bounding box of the tile
-                    let tileKey = JSON.stringify(tileBounds); // Convert to string for Set compatibility
-
-                    if (currentColor === "clear") {
-                        coloredTiles.delete(tileKey); // Remove the tile from the set
-                        rect.setStyle({ fillColor: "#3388ff", fillOpacity: 0.2 }); // Reset to default
-                    } else {
-                        coloredTiles.add(tileKey); // Add the tile to the set
-                        rect.setStyle({ fillColor: currentColor, fillOpacity: 0.5 }); // Apply the selected color
-                    }
-                }
-            });
-
-            // Add click event for normal mode
-            rect.on('click', function () {
-                if (isDrawingMode) {
-                    let tileBounds = { southWest, northEast }; // Bounding box of the tile
-                    let tileKey = JSON.stringify(tileBounds); // Convert to string for Set compatibility
-
-                    if (currentColor === "clear") {
-                        coloredTiles.delete(tileKey); // Remove the tile from the set
-                        rect.setStyle({ fillColor: "#3388ff", fillOpacity: 0.2 }); // Reset to default
-                    } else {
-                        coloredTiles.add(tileKey); // Add the tile to the set
-                        rect.setStyle({ fillColor: currentColor, fillOpacity: 0.5 }); // Apply the selected color
-                    }
-                }
-            });
-
-            rect.addTo(map);
-            grid.push(rect);
+// Function to fetch grid data from a backend or static file
+async function fetchGridData() {
+    try {
+        // Fetch the grid data (replace with your backend API or static file URL)
+        console.log("fetching grid data...")
+        const response = await fetch('/grid-data'); // Example: JSON file hosted as a static resource
+        if (!response.ok) {
+            throw new Error('Failed to fetch grid data');
         }
+        console.log("grid data fetch success");
+        const gridData = await response.json();
+        return gridData;
+    } catch (error) {
+        console.error('Error fetching grid data:', error);
+        return [];
     }
-    return grid;
 }
 
-// Define Slovenia's bounding box (approximate)
-let sloveniaBounds = L.latLngBounds(
-    [45.42, 13.37], // Southwest corner
-    [46.88, 16.60]  // Northeast corner
-);
+// Function to render the grid using predefined coordinates
+async function renderPredefinedGrid() {
+    const gridData = await fetchGridData();
+    console.log('Grid data:', gridData);
+    if (!gridData || gridData.length === 0) {
+        console.error('No grid data available');
+        return;
+    }
+    gridData.forEach(cell => {
+        const southWest = [cell.sw_lat, cell.sw_lon];
+        const northEast = [cell.ne_lat, cell.ne_lon];
+        const rect = L.rectangle([southWest, northEast], {
+            color: elToColor["clearColor"],
+            weight: 1,
+            fillOpacity: 0.2
+        });
 
-// Create a 10x10 grid over Slovenia
-createGrid(sloveniaBounds, 1);
+        // Add mouseover event for drawing mode
+        rect.on('mouseover', function () {
+            if (isDrawingMode && isMouseDown) {
+                let tileKey = JSON.stringify({ southWest, northEast }); // Use tile bounds as the key
+
+                if (currentColor === "clear") {
+                    coloredTiles.delete(tileKey); // Remove the tile from the Map
+                    rect.setStyle({ fillColor: elToColor["clearColor"], fillOpacity: 0.2 }); // Reset to default
+                } else {
+                    coloredTiles.set(tileKey, currentColor); // Add or update the tile with the selected color
+                    rect.setStyle({ fillColor: currentColor, fillOpacity: 0.5 }); // Apply the selected color
+                }
+            }
+        });
+
+        // Add click event for drawing mode
+        rect.on('click', function () {
+            if (isDrawingMode) {
+                console.log('Clicked on tile:', southWest, northEast);
+                console.log('Current color:', currentColor);
+                let tileKey = JSON.stringify({ southWest, northEast }); // Use tile bounds as the key
+
+                if (currentColor === "clear") {
+                    coloredTiles.delete(tileKey); // Remove the tile from the Map
+                    console.log('Removing tile:', tileKey);
+                    rect.setStyle({ fillColor: elToColor["clearColor"], fillOpacity: 0.2 }); // Reset to default
+                } else {
+                    coloredTiles.set(tileKey, currentColor); // Add or update the tile with the selected color
+                    rect.setStyle({ fillColor: currentColor, fillOpacity: 0.5 }); // Apply the selected color
+                }
+            }
+        });
+
+        // Add the rectangle to the layer group
+        gridLayer.addLayer(rect);
+    });
+
+    // Add the grid layer to the map
+    gridLayer.addTo(map);
+    // map.removeLayer(gridLayer); // Hide the grid by default
+}
+
+// Call the function to render the grid
+renderPredefinedGrid();
+
+// Drawing mode lets draw and blocks moving the map
+document.getElementById('drawingModeToggle').addEventListener('change', function (event) {
+    isDrawingMode = event.target.checked;
+
+    if (isDrawingMode) {
+        // map.addLayer(gridLayer); // Show the grid
+        map.dragging.disable(); // Disable map dragging
+    } else {
+        // map.removeLayer(gridLayer); // Hide the grid
+        map.dragging.enable(); // Re-enable map dragging
+    }
+});
+
+//show hide grid toggle
+document.getElementById('showHideGridToggle').addEventListener('change', function (event) {
+    if (event.target.checked) {
+        map.addLayer(gridLayer); // Show the grid
+    } else {
+        map.removeLayer(gridLayer); // Hide the grid
+    }
+});
+
+//button for resetting the grid
+document.getElementById('clearButton').addEventListener('click', function () {
+    console.log('Resetting grid...');
+    coloredTiles.clear(); // Clear the Map of colored tiles
+    gridLayer.eachLayer(function (layer) {
+        layer.setStyle({ fillColor: elToColor["clearColor"], fillOpacity: 0.2 }); // Reset all rectangles to default style
+    });
+    console.log('Grid reset successfully.');
+});
 
 // Add event listener to the button
 document.getElementById('predictButton').addEventListener('click', function () {
-    // Convert the Set of colored tiles to an array
-    let data = Array.from(coloredTiles);
+    // Send data to the backend
+    const data = Array.from(coloredTiles.entries()).map(([key, color]) => {
+        const { southWest, northEast } = JSON.parse(key);
+        return {
+            southWest: southWest,
+            northEast: northEast,
+            color: color
+        };
+    });
 
-    // Send the data to the backend
-    /*
-    fetch('/process-colored-tiles', {
+    fetch('/predict', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ coloredTiles: data })
+        body: JSON.stringify(data)
     })
-    .then(response => response.json())
-    .then(result => {
-        console.log('Data sent successfully:', result);
-    })
-    .catch(error => {
-        console.error('Error sending data:', error);
-    });
-    */
-
-    // For demonstration purposes, just log the data
-    console.log('Colored tiles data:', data);
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to send prediction data');
+            }
+            // Redirect to prediction.html after successful submission
+            window.location.href = '/prediction';
+        })
+        .catch(error => {
+            console.error('Error sending data:', error);
+            alert('Error sending data.');
+        });
 });

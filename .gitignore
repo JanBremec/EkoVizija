@@ -30,3 +30,7 @@ htmlcov/
 # Ignore environment files
 .env
 *.env
+
+# data
+*.csv
+*.tif
