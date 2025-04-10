@@ -143,6 +143,11 @@
 
 
     <script src="{{ url_for('static', filename='map_control.js') }}"></script>
+    <script>
+        // Access user ID passed from the backend
+        const userId = "{{ user_id }}";
+        console.log("User ID:", userId); // Print user ID to the console
+    </script>
 </body>
 
 </html>

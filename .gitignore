@@ -34,4 +34,4 @@ htmlcov/
 # data
 *.tif
 grid_square*.png
-
+satellite_images
