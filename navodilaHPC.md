@@ -29,7 +29,11 @@ Za pognat image_fetcher.py:
 za pognat model2.py:
 `sbatch job_model.sh`
 
-tisto kar printa python bo na voljo v DigiVizijaUcenjeTest.out
+tisto kar printa python bo na voljo v DigiVizijaUcenjeTest.out oz. tam kjer ma .sh nastiman parameter
+
+Z ukazom `watch squeue --me` lahko opazujemo stanje posla ki se izvaja (refresha se vsakih 2 sekund)
+Za ugotoviti koliko pomnilnika uporablja posel: `sacct --job=<id joba> --format=JobID,Account,MaxRRS`
+
 
 ## upload in download datotek in folderjev
 moras imeti urejeno ssh povezavo

@@ -34,3 +34,4 @@ htmlcov/
 # data
 *.csv
 *.tif
+grid_square*.png
