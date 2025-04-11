@@ -2,6 +2,7 @@ import uuid
 from flask import Flask, render_template, jsonify, request, session
 import csv
 import os
+import time
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.urandom(24)
@@ -66,17 +67,39 @@ def get_grid_data():
 def prediction_data():
     prediction_data = []
     data_type = ""
-    with open('./air_quality/Slovenia_AirQuality_1kmGrid_2019_withBounds.csv', 'r') as csvfile:
+    with open('./air_quality/Slovenia_AirQuality_1kmGrid_2021_withBounds.csv', 'r') as csvfile:
         reader = csv.DictReader(csvfile)
-        # if csv contains sw and ne data, create data for grid
         CSVfilednames = reader.fieldnames
-        if (
-                "sw_lon" in CSVfilednames and "sw_lat" in CSVfilednames and "ne_lon" in CSVfilednames and "ne_lat" in CSVfilednames):
+        # data can have for each square in the grid the north east and south west coordinates
+        # or the central point of the grid square
+        # if it has both, we send both to the frontend and the user will switch between the two
+        missing_fields = [field for field in ["sw_lon", "sw_lat", "ne_lon", "ne_lat", "lat", "lon"] if field not in CSVfilednames]
+        if missing_fields:
+            print(f"Missing fields: {missing_fields}")
+        if("sw_lon" in CSVfilednames and "sw_lat" in CSVfilednames and "ne_lon" in CSVfilednames and "ne_lat" in CSVfilednames and "lat" in CSVfilednames and "lon" in CSVfilednames):
+
             for row in reader:
                 prediction_data.append({
                     "grid_id": row["grid_id"],
                     "lon": float(row["lon"]),
                     "lat": float(row["lat"]),
+                    "sw_lon": float(row["sw_lon"]),
+                    "sw_lat": float(row["sw_lat"]),
+                    "ne_lon": float(row["ne_lon"]),
+                    "ne_lat": float(row["ne_lat"]),
+                    "year": int(row["year"]),
+                    "no2_ppb": float(row["no2_ppb"]),
+                    "co_ppb": float(row["co_ppb"]),
+                    "so2_ppb": float(row["so2_ppb"]),
+                    "o3_ppb": float(row["o3_ppb"]),
+                    "ch4_ppb": float(row["ch4_ppb"])
+                })
+            data_type = "grid_and_point"
+        # if csv contains sw and ne data, create data for grid
+        elif ("sw_lon" in CSVfilednames and "sw_lat" in CSVfilednames and "ne_lon" in CSVfilednames and "ne_lat" in CSVfilednames):
+            for row in reader:
+                prediction_data.append({
+                    "grid_id": row["grid_id"],
                     "sw_lon": float(row["sw_lon"]),
                     "sw_lat": float(row["sw_lat"]),
                     "ne_lon": float(row["ne_lon"]),
@@ -110,17 +133,38 @@ def prediction_data():
 def unchanged_prediction_data():
     prediction_data = []
     data_type = ""
-    with open('./air_quality/Slovenia_AirQuality_1kmGrid_2020_withBounds.csv', 'r') as csvfile:
+    # for now read the 2020 data just to test frontend
+    # TODO: send the prediction data for if there is no change in the grid
+    with open('./air_quality/Slovenia_AirQuality_1kmGrid_2022_withBounds.csv', 'r') as csvfile:
         reader = csv.DictReader(csvfile)
-        # if csv contains sw and ne data, create data for grid
         CSVfilednames = reader.fieldnames
-        if (
-                "sw_lon" in CSVfilednames and "sw_lat" in CSVfilednames and "ne_lon" in CSVfilednames and "ne_lat" in CSVfilednames):
+        # data can have for each square in the grid the north east and south west coordinates
+        # or the central point of the grid square
+        # if it has both, we send both to the frontend and the user will switch between the two
+        if("sw_lon" in CSVfilednames and "sw_lat" in CSVfilednames and "ne_lon" in CSVfilednames and "ne_lat" in CSVfilednames and "lat" in CSVfilednames and "lon" in CSVfilednames):
+
             for row in reader:
                 prediction_data.append({
                     "grid_id": row["grid_id"],
                     "lon": float(row["lon"]),
                     "lat": float(row["lat"]),
+                    "sw_lon": float(row["sw_lon"]),
+                    "sw_lat": float(row["sw_lat"]),
+                    "ne_lon": float(row["ne_lon"]),
+                    "ne_lat": float(row["ne_lat"]),
+                    "year": int(row["year"]),
+                    "no2_ppb": float(row["no2_ppb"]),
+                    "co_ppb": float(row["co_ppb"]),
+                    "so2_ppb": float(row["so2_ppb"]),
+                    "o3_ppb": float(row["o3_ppb"]),
+                    "ch4_ppb": float(row["ch4_ppb"])
+                })
+            data_type = "grid_and_point"
+        # if csv contains sw and ne data, create data for grid
+        elif ("sw_lon" in CSVfilednames and "sw_lat" in CSVfilednames and "ne_lon" in CSVfilednames and "ne_lat" in CSVfilednames):
+            for row in reader:
+                prediction_data.append({
+                    "grid_id": row["grid_id"],
                     "sw_lon": float(row["sw_lon"]),
                     "sw_lat": float(row["sw_lat"]),
                     "ne_lon": float(row["ne_lon"]),
@@ -154,7 +198,8 @@ def unchanged_prediction_data():
 def predict():
     # code for predicting with ai
 
-    # for now just responds success
+    # for now just responds success after a while
+    time.sleep(2)
     return "Success", 201
 
 

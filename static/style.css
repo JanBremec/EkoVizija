@@ -368,6 +368,25 @@ body {
     float: right;
 }
 
+/* Ensure the predictionMap container uses flexbox */
+#predictionMap {
+    display: flex; /* Use flexbox to arrange child elements side by side */
+    height: calc(100% - 60px); /* Adjust height to account for the navbar (60px) */
+    width: 100%;
+    margin-top: 60px; /* Move the map down by the height of the navbar */
+}
+
+/* Style for the left and right maps */
+.map {
+    flex: 1; /* Each map takes up equal space */
+    height: 100%; /* Ensure the maps fill the height of the container */
+}
+
+/* Optional: Add a border between the two maps */
+#leftMap {
+    border-right: 2px solid rgba(255, 255, 255, 0.3); /* Subtle border for separation */
+}
+
 /* Hide the sidebar content */
 .sidebar-content.collapsed {
     display: none;
@@ -430,4 +449,130 @@ body {
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+
+/* Style for prediction.html titles of left and right map */
+.titles-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    pointer-events: none;
+    position: absolute;
+    top: 10px;
+    left: 0;
+    padding: 0 10px;
+    z-index: 1000;
+}
+
+.map-title {
+    background: rgba(255, 255, 255, 0.7);
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-weight: bold;
+    width: 45%;
+    text-align: center;
+}
+
+.map-title.left {
+    margin-right: 5%;
+}
+
+/* Style for the container for controlling which pollutant to show in prediction.html*/
+.pollutant-control {
+    position: fixed;
+    top: 80px; /* Distance from the top of the screen */
+    right: 50px; /* Distance from the right of the screen */
+    background: rgba(255, 255, 255, 0.9); /* Semi-transparent background */
+    padding: 10px 15px; /* Padding around the toggle */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    font-size: 14px; /* Font size for the label */
+    z-index: 1000; /* Ensure it appears above other elements */
+}
+
+.hide-toggle {
+    position: fixed;
+    top: 80px;
+    left: 50px;
+    cursor: pointer;
+    accent-color: #007bff; /* Change the color of the toggle */
+    margin-left: 10px; /* Add spacing between the label and the toggle */
+}
+
+/* General Legend Styles */
+#legend {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    background: white;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    font-size: 12px;
+    z-index: 1000;
+    width: 250px;
+}
+
+.legend-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.legend-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Heatmap Legend Styles */
+#heatmap-legend-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#heatmap-legend-gradient {
+    height: 10px;
+    width: 100%;
+    background: linear-gradient(to right, blue, lime, red); /* Default gradient */
+    margin-bottom: 5px;
+}
+
+#heatmap-legend-labels {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 10px;
+}
+
+/* Grid Legend Styles */
+#grid-legend-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    justify-content: space-between;
+}
+
+#grid-legend-content div {
+    flex: 1 1 30%;
+    text-align: center;
+    padding: 5px;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 3px;
+    font-size: 10px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.heat-grid-control {
+    position: fixed;
+    top: 160px; /* Distance from the top of the screen */
+    left: 50px; /* Distance from the right of the screen */
+    background: rgba(255, 255, 255, 0.9); /* Semi-transparent background */
+    padding: 10px 15px; /* Padding around the toggle */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    font-size: 14px; /* Font size for the label */
+    z-index: 1000; /* Ensure it appears above other elements */
 }

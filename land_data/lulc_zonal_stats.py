@@ -9,6 +9,9 @@ from scipy.stats import mode
 import matplotlib.pyplot as plt
 
 """
+Code to process Land Use Land Cover (LULC) tif data for grid squares.
+For each grid square, it computes the mode of LULC values and the percentage of each class.
+The LULC classes are defined as follows:
 Land cover classes:
 1  Water
 2  Trees
@@ -93,6 +96,6 @@ for class_id in range(1, 12):
     grid_df[f"class_{class_id}_percent"] = results.apply(lambda x: x[1][class_id])
 
 # Save the results to a CSV
-grid_df.to_csv("lulc_results.csv", index=False)
+grid_df.to_csv(f"lulc_results_{year}.csv", index=False)
 
-print("Processing completed. Results saved to 'lulc_results.csv'.")
+print(f"Processing completed. Results saved to 'lulc_results_{year}.csv'.")

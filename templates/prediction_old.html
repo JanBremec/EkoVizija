@@ -7,10 +7,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EkoVizija Dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-
+    
     <!-- leaflet plugins -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.2.0/leaflet.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.2.0/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.2.0/leaflet.js"></script> 
     <script src="../static/leaflet-side-by-side.js"></script>
     <script src="../static/leaflet-heat.js"></script>
     <script src="../static/L.Map.Sync.js"></script>
@@ -26,46 +26,12 @@
         </iframe>
     </div> -->
 
-
+    
     <div class="background-map" id="predictionMap">
         <div class="titles-container">
             <div class="map-title left">Changed Scenario</div>
             <div class="map-title right">Unchanged Scenario</div>
         </div>
-        <div id="leftMap" class="map"></div>
-        <div id="rightMap" class="map"></div>
-    </div>
-
-    <!-- Pollutant Selector -->
-    <div class="pollutant-control">
-        <label for="pollutantSelector">Select Pollutant:</label>
-        <select id="pollutantSelector">
-            <option value="no2_ppb">no2_ppb</option>
-            <option value="co_ppb">co_ppb</option>
-            <option value="so2_ppb">so2_ppb</option>
-            <option value="o3_ppb">o3_ppb</option>
-            <option value="ch4_ppb">ch4_ppb</option>
-        </select>
-    </div>
-    <div class="heat-grid-control">
-        <label for="mapSelector">Select Map Type:</label>
-        <select id="mapSelector">
-            <option value="heat">heat</option>
-            <option value="grid">grid</option>
-        </select>
-    </div>
-    <!-- hide/show heatmap -->
-    <div class="hide-toggle">
-        <label for="pollutionToggle">Show Pollution:</label>
-        <input type="checkbox" id="pollutionToggle" checked>
-        <label for="legendToggle">Show Legend:</label>
-        <input type="checkbox" id="legendToggle" checked>
-    </div>
-
-    <!--pollution legend -->
-    <div id="legend" class="legend">
-        <div class="legend-title" id="legend-title">Heatmap legend</div>
-        <div class="legend-content" id="legend-content"></div>
     </div>
 
 
@@ -163,8 +129,8 @@
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 
 
-    <script src="{{ url_for('static', filename='prediction_map.js') }}"></script>
-    <!-- <script src="{{ url_for('static', filename='test_heatmap.js') }}"></script> -->
+    <!-- <script src="{{ url_for('static', filename='prediction_map.js') }}"></script> -->
+    <script src="{{ url_for('static', filename='test_heatmap.js') }}"></script>
 </body>
 
 </html>
