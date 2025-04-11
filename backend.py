@@ -199,7 +199,9 @@ def predict():
     # code for predicting with ai
 
     # for now just responds success after a while
-    time.sleep(2)
+    time.sleep(3)
+    # print the data that was sent
+    print(request.json)
     return "Success", 201
 
 

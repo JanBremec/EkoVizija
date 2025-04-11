@@ -7,6 +7,13 @@ let osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 });
 
+let darkOSM = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/">CARTO</a>',
+    subdomains: 'abcd',
+    maxZoom: 19,
+    // pane: 'tilePane' // Use the custom tile pane
+});
+
 // select the layers we want to visualize
 // https://sh.dataspace.copernicus.eu/ogc/wms/<INSTANCE-ID>
 
@@ -25,14 +32,14 @@ function createWmsLayer(layerId) {
         layers: layerId,
         transparent: true,
         format: 'image/png',
-        time: "2024-06-01/2025-03-30"
+        // time: "2024-06-01/2025-03-30"
     });
     return layer;
 }
 
 let vegetationIdx = createWmsLayer("VEGETATION_INDEX"); //nvdi
-let naturalColor = createWmsLayer("TRUE-COLOR");
-let metan = createWmsLayer("METAN");
+// let naturalColor = createWmsLayer("TRUE-COLOR");
+// let metan = createWmsLayer("METAN");
 let cloudless = createWmsLayer("CLOUDLESS_NATURAL");
 
 let baseMaps = {
@@ -40,9 +47,9 @@ let baseMaps = {
 };
 let overlayMaps = {
     'Vegetation Index': vegetationIdx,
-    'True Color': naturalColor,
+    // 'True Color': naturalColor,
     'Cloudless Natural': cloudless,
-    'Methane': metan
+    // 'Methane': metan
 }
 
 let map = L.map('copernicusMap', {
@@ -80,7 +87,11 @@ window.addEventListener('load', function () {
     // Set default state for the color mode toggles
     document.getElementById('forest').checked = false;
     document.getElementById('city').checked = true; // Default to "City"
+    document.getElementById('highway').checked = false;
+    document.getElementById('crops').checked = false;
+    document.getElementById('factory').checked = false;
     document.getElementById('clearColor').checked = false;
+
 
     // Reset the currentColor variable to match the default
     currentColor = elToColor["city"];
@@ -100,16 +111,13 @@ document.getElementById('drawingModeToggle').addEventListener('change', function
 });
 
 // Add event listeners for color mode toggles
-document.getElementById('forest').addEventListener('change', function () {
-    if (this.checked) currentColor = elToColor["forest"];
-});
-
-document.getElementById('city').addEventListener('change', function () {
-    if (this.checked) currentColor = elToColor["city"];
-});
-
-document.getElementById('clearColor').addEventListener('change', function () {
-    if (this.checked) currentColor = "clear";
+Object.keys(elToColor).forEach(colorKey => {
+    const toggleElement = document.getElementById(colorKey);
+    if (toggleElement) {
+        toggleElement.addEventListener('change', function () {
+            if (this.checked) currentColor = elToColor[colorKey];
+        });
+    }
 });
 
 // Add event listeners for mouse events on the map
@@ -246,10 +254,18 @@ document.getElementById('clearButton').addEventListener('click', function () {
     });
     console.log('Grid reset successfully.');
 });
-
-// Add event listener to the button
+// Add event listener to the predict button
 document.getElementById('predictButton').addEventListener('click', function () {
-    // Send data to the backend
+    const predictButton = document.getElementById('predictButton');
+    const spinner = document.createElement('span'); // Create a spinner element
+    spinner.className = 'spinner'; // Add the custom spinner class
+
+    // Disable the button and add the spinner
+    predictButton.disabled = true;
+    predictButton.textContent = 'Trenutek da premislim... ';
+    predictButton.appendChild(spinner);
+
+    // Prepare data to send to the backend
     const data = Array.from(coloredTiles.entries()).map(([key, color]) => {
         const { southWest, northEast } = JSON.parse(key);
         return {
@@ -259,6 +275,7 @@ document.getElementById('predictButton').addEventListener('click', function () {
         };
     });
 
+    // Send the data to the backend
     fetch('/predict', {
         method: 'POST',
         headers: {
@@ -276,5 +293,34 @@ document.getElementById('predictButton').addEventListener('click', function () {
         .catch(error => {
             console.error('Error sending data:', error);
             alert('Error sending data.');
+        })
+        .finally(() => {
+            // Re-enable the button and remove the spinner in case of an error
+            predictButton.disabled = false;
+            predictButton.textContent = 'Napovej';
         });
+});
+
+// Add a dark mode toggle button
+const themeToggleButton = document.querySelector('.theme-toggle');
+// Determine the initial mode based on the button text
+let isDarkMode = themeToggleButton.textContent === 'Light Mode';
+
+// Add event listener for the dark mode toggle
+themeToggleButton.addEventListener('click', () => {
+    isDarkMode = !isDarkMode;
+
+    // Remove the current tile layer
+    map.eachLayer(layer => {
+        if (layer === osm || layer === darkOSM) {
+            map.removeLayer(layer);
+        }
+    });
+
+    // Add the appropriate tile layer based on the mode
+    const tileLayer = isDarkMode ? darkOSM : osm;
+    tileLayer.addTo(map);
+
+    // Update the button text
+    themeToggleButton.textContent = isDarkMode ? 'Light Mode' : 'Dark Mode';
 });

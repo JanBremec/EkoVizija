@@ -576,3 +576,30 @@ body {
     font-size: 14px; /* Font size for the label */
     z-index: 1000; /* Ensure it appears above other elements */
 }
+
+/* Spinner styles for the spinning wheel animation while loading */
+.spinner {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    
+    /* black spinning wheel */
+    /* border: 2px solid rgba(0, 0, 0, 0.2);  
+    /*border-top: 2px solid #000;*/
+
+    /* white spinning wheel */
+    border: 2px solid rgba(255, 255, 255, 0.5); /* Light border (semi-transparent white) */
+    border-top: 2px solid #fff; /* White border for the spinning effect */
+    border-radius: 50%;
+    animation: spin 0.75s linear infinite; /* Spinning animation */
+}
+
+/* Keyframes for the spinning animation */
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
