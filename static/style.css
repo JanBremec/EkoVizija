@@ -459,7 +459,7 @@ body {
     width: 100%;
     pointer-events: none;
     position: absolute;
-    top: 10px;
+    top: 40px;
     left: 0;
     padding: 0 10px;
     z-index: 1000;
@@ -481,8 +481,8 @@ body {
 /* Style for the container for controlling which pollutant to show in prediction.html*/
 .pollutant-control {
     position: fixed;
-    top: 80px; /* Distance from the top of the screen */
-    right: 50px; /* Distance from the right of the screen */
+    top: 135px; /* Distance from the top of the screen */
+    right: 15px; /* Distance from the right of the screen */
     background: rgba(255, 255, 255, 0.9); /* Semi-transparent background */
     padding: 10px 15px; /* Padding around the toggle */
     border-radius: 8px; /* Rounded corners */
@@ -567,7 +567,7 @@ body {
 
 .heat-grid-control {
     position: fixed;
-    top: 160px; /* Distance from the top of the screen */
+    top: 135px; /* Distance from the top of the screen */
     left: 50px; /* Distance from the right of the screen */
     background: rgba(255, 255, 255, 0.9); /* Semi-transparent background */
     padding: 10px 15px; /* Padding around the toggle */

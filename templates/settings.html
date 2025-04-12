@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EkoVizija Settings</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://kit.fontawesome.com/a904cbc285.js" crossorigin="anonymous"></script>
 </head>
 <body>
 
@@ -15,21 +16,21 @@
             <div class="navbar-left">
                 <h1 class="brand-title">EkoVizija</h1>
                 <div class="nav-buttons">
-                    <a href="/" class="nav-button">Dashboard</a>
-                    <a href="/analytics" class="nav-button">Analytics</a>
-                    <a href="/reports" class="nav-button">Reports</a>
-                    <a href="/settings" class="nav-button active">Settings</a>
+                    <a href="/" class="nav-button"><i class="fas fa-home"></i> Dashboard</a>
+                    <a href="/analytics" class="nav-button"><i class="fas fa-chart-line"></i> Analytics</a>
+                    <a href="/reports" class="nav-button"><i class="fas fa-file-alt"></i> Reports</a>
+                    <a href="/settings" class="nav-button active"><i class="fas fa-cog"></i> Settings</a>  
                 </div>
             </div>
             <div class="navbar-right">
-                <button class="theme-toggle">Dark Mode</button>
+                <button class="theme-toggle"><i class="fas fa-adjust"></i> Dark Mode</button>
             </div>
         </div>
     </nav>
 
     <!-- Page Content -->
     <div class="page-content">
-        <h2>System Settings</h2>
+        <h2><i class="fas fa-cog"></i> System Settings</h2>
         <div class="settings-section">
             <div class="settings-card">
                 <h3>General Settings</h3>

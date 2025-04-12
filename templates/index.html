@@ -3,163 +3,102 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>EkoVizija Dashboard</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.2.0/leaflet.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.2.0/leaflet.js"></script>
 
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.2.0/leaflet.css" integrity="sha512-..." crossorigin="anonymous" />
+
+    <!-- JS Libraries (Leaflet async for performance) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.2.0/leaflet.js" defer></script>
+    <script src="https://kit.fontawesome.com/a904cbc285.js" crossorigin="anonymous" defer></script>
+
+    <!-- Local JS Scripts -->
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='map_control.js') }}" defer></script>
+
+    <!-- User ID access -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const userId = "{{ user_id }}";
+            console.log("User ID:", userId);
+        });
+    </script>
+
+    <script src="https://kit.fontawesome.com/a904cbc285.js" crossorigin="anonymous"></script>
 </head>
+
 
 <body>
     <!-- Background Map -->
-    <!-- <div class="background-map">
-        <iframe width="100%" height="600" frameborder="0" scrolling="no" scrollwheel: false, marginheight="0"
-            marginwidth="0"
-            src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=1%20Grafton%20Street,%20Dublin,%20Ireland+(My%20Business%20Name)&amp;t=k&amp;z=14&amp;ie=UTF8&amp;output=embed"></iframe>
-        </iframe>
-    </div> -->
-
-    
     <div class="background-map" id="copernicusMap"></div>
 
-
-    <!-- Modern Navbar -->
+    <!-- Navbar -->
     <nav class="modern-navbar">
         <div class="navbar-content">
             <div class="navbar-left">
                 <h1 class="brand-title">EkoVizija</h1>
                 <div class="nav-buttons">
-                    <a href="/" class="nav-button {{ 'active' if request.path == '/' else '' }}">Dashboard</a>
-                    <a href="/analytics"
-                        class="nav-button {{ 'active' if request.path == '/analytics' else '' }}">Analytics</a>
-                    <a href="/reports"
-                        class="nav-button {{ 'active' if request.path == '/reports' else '' }}">Reports</a>
-                    <a href="/settings"
-                        class="nav-button {{ 'active' if request.path == '/settings' else '' }}">Settings</a>
+                    <a href="/" class="nav-button {{ 'active' if request.path == '/' else '' }}"><i class="fas fa-home"></i> Dashboard</a>
+                    <a href="/analytics" class="nav-button {{ 'active' if request.path == '/analytics' else '' }}"><i class="fas fa-chart-line"></i> Analytics</a>
+                    <a href="/reports" class="nav-button {{ 'active' if request.path == '/reports' else '' }}"><i class="fas fa-file-alt"></i> Reports</a>
+                    <a href="/settings" class="nav-button {{ 'active' if request.path == '/settings' else '' }}"><i class="fas fa-cog"></i> Settings</a>
                 </div>
             </div>
             <div class="navbar-right">
-                <button class="theme-toggle">Dark Mode</button>
+                <button class="theme-toggle"><i class="fas fa-adjust"></i> Dark Mode</button>
             </div>
         </div>
     </nav>
 
-    <!-- Page Content -->
+    <!-- Main Page Content -->
     <div class="page-content">
         {% block content %}{% endblock %}
     </div>
 
-    <!-- Sidebars -->
-
-    <!-- Left Sidebar -->
-    <!-- <div class="left-sidebar">
-        <div class="sidebar-header">
-            <h3>Quick Access</h3>
-            <button class="toggle-button">☰</button>
-        </div>
-        <div class="sidebar-content">
-            <div class="sidebar-section">
-                <h4>Navigation</h4>
-                <ul>
-                    <li><a href="#"><i class="fas fa-home"></i> Dashboard</a></li>
-                    <li><a href="#"><i class="fas fa-chart-line"></i> Analytics</a></li>
-                    <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
-                </ul>
-            </div>
-            <div class="sidebar-section">
-                <h4>Quick Actions</h4>
-                <button class="sidebar-button">New Project</button>
-                <button class="sidebar-button">Generate Report</button>
-            </div>
-        </div>
-    </div> -->
-
-    <!-- Right Sidebar -->
-    <!-- <div class="right-sidebar">
-        <div class="sidebar-header">
-            <h3>Notifications</h3>
-            <button class="toggle-button">☰</button>
-        </div>
-        <div class="sidebar-content">
-            <div class="notification-card">
-                <div class="card-header">
-                    <i class="fas fa-bell"></i>
-                    <span>3 New Alerts</span>
-                </div>
-                <div class="card-content">
-                    <p>System update available</p>
-                    <p>New user registered</p>
-                    <p>Backup completed</p>
-                </div>
-            </div>
-            <div class="sidebar-section">
-                <h4>Quick Stats</h4>
-                <div class="stat-card">
-                    <i class="fas fa-users"></i>
-                    <div class="stat-content">
-                        <h5>Active Users</h5>
-                        <p>1,234</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> -->
-
+    <!-- Drawing Controls -->
     <div class="drawing-mode-toggle">
-        <label>
-            <input type="checkbox" id="showHideGridToggle" checked>
-            Show/Hide Grid
-        </label>
-        <label>
-            <input type="checkbox" id="drawingModeToggle">
-            Enable Drawing Mode
-        </label>
-        <label>
-            <input type="radio" name="colorMode" id="forest" value="green">
-            Forest
-        </label>
-        <label>
-            <input type="radio" name="colorMode" id="city" value="red" checked>
-            City
-        </label>
-        <label>
-            <input type="radio" name="colorMode" id="highway" value="grey" checked>
-            Highway
-        </label>
-        <label>
-            <input type="radio" name="colorMode" id="crops" value="yellow">
-            Crops
-        </label>
-        <label>
-            <input type="radio" name="colorMode" id="factory" value="purple">
-            Factory
-        </label>
-        <label>
-            <input type="radio" name="colorMode" id="clearColor" value="clear">
-            Eraser
-        </label>
-        <button id="clearButton">Clear</button>
+        <label><input type="checkbox" id="showHideGridToggle" checked /><i class="fas fa-th"></i> Show Grid</label>
+        <label><input type="checkbox" id="drawingModeToggle" /><i class="fas fa-pencil-alt"></i> Enable Drawing Mode</label>
+
+        <label><input type="radio" name="colorMode" id="forest" value="green" /><i class="fas fa-tree"></i> Forest</label>
+        <label><input type="radio" name="colorMode" id="city" value="red" checked /><i class="fas fa-city"></i> City</label>
+        <label><input type="radio" name="colorMode" id="highway" value="grey" /><i class="fas fa-road"></i> Highway</label>
+        <label><input type="radio" name="colorMode" id="crops" value="yellow" /><i class="fas fa-seedling"></i> Crops</label>
+        <label><input type="radio" name="colorMode" id="factory" value="purple" /><i class="fas fa-industry"></i> Factory</label>
+        <label><input type="radio" name="colorMode" id="clearColor" value="clear" /> <i class="fas fa-eraser"></i> Eraser</label>
+
+        <button id="clearButton"><i class="fas fa-trash-alt"></i> Clear Map</button>
     </div>
 
-    <!-- button for sending data of colored area to the backend for prediction -->
-    <button id="predictButton" class="predict-button">Napovej!</button>
+    <!-- Prediction Button -->
+    <button id="predictButton" class="predict-button"><i class="fas fa-bolt"></i> Predict!</button>
 
     <!-- Draggable Bottom Panel -->
     <div id="panel">This is the sliding panel!</div>
-
     <button id="arrow">▲</button>
-    <script src="https://kit.fontawesome.com/a904cbc285.js"></script>
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
-
-
-    <script src="{{ url_for('static', filename='map_control.js') }}"></script>
-    <script>
-        // Access user ID passed from the backend
-        const userId = "{{ user_id }}";
-        console.log("User ID:", userId); // Print user ID to the console
-    </script>
 </body>
 
+<style>
+    /* Default Light Mode */
+    body {
+        background-color: white;
+        color: black;
+    }
+
+    /* Dark Mode Styles */
+    body.dark-mode {
+        background-color: #121212;
+        color: white;
+    }
+
+    /* Button Style */
+    button {
+        padding: 10px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+</style>
 </html>
