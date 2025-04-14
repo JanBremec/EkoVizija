@@ -9,7 +9,7 @@ from scipy.stats import mode
 import matplotlib.pyplot as plt
 
 """
-Code to process Land Use Land Cover (LULC) tif data for grid squares.
+Code to process Land Use Land Cover (LULC) tif data from Sentinel-2 10-Meter Land Use/Land Cover made by ESRI and Impact Observatory for grid squares.
 For each grid square, it computes the mode of LULC values and the percentage of each class.
 The LULC classes are defined as follows:
 Land cover classes:
