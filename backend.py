@@ -113,7 +113,7 @@ def prediction_data():
                     "sw_lat": float(row["sw_lat"]),
                     "ne_lon": float(row["ne_lon"]),
                     "ne_lat": float(row["ne_lat"]),
-                    "year": int(row["year"]),
+                    "year": int(float(row["year"])),
                     "no2_ppb": float(row["no2_ppb"]),
                     "co_ppb": float(row["co_ppb"]),
                     "so2_ppb": float(row["so2_ppb"]),
@@ -130,7 +130,7 @@ def prediction_data():
                     "sw_lat": float(row["sw_lat"]),
                     "ne_lon": float(row["ne_lon"]),
                     "ne_lat": float(row["ne_lat"]),
-                    "year": int(row["year"]),
+                    "year": int(float(row["year"])),
                     "no2_ppb": float(row["no2_ppb"]),
                     "co_ppb": float(row["co_ppb"]),
                     "so2_ppb": float(row["so2_ppb"]),
@@ -144,7 +144,7 @@ def prediction_data():
                 prediction_data.append({
                     "lat": float(row["lat"]),
                     "lon": float(row["lon"]),
-                    "year": int(row["year"]),
+                    "year": int(float(row["year"])),
                     "no2_ppb": float(row["no2_ppb"]),
                     "co_ppb": float(row["co_ppb"]),
                     "so2_ppb": float(row["so2_ppb"]),
@@ -178,7 +178,7 @@ def unchanged_prediction_data():
                     "sw_lat": float(row["sw_lat"]),
                     "ne_lon": float(row["ne_lon"]),
                     "ne_lat": float(row["ne_lat"]),
-                    "year": int(row["year"]),
+                    "year": int(float(row["year"])),
                     "no2_ppb": float(row["no2_ppb"]),
                     "co_ppb": float(row["co_ppb"]),
                     "so2_ppb": float(row["so2_ppb"]),
@@ -195,7 +195,7 @@ def unchanged_prediction_data():
                     "sw_lat": float(row["sw_lat"]),
                     "ne_lon": float(row["ne_lon"]),
                     "ne_lat": float(row["ne_lat"]),
-                    "year": int(row["year"]),
+                    "year": int(float(row["year"])),
                     "no2_ppb": float(row["no2_ppb"]),
                     "co_ppb": float(row["co_ppb"]),
                     "so2_ppb": float(row["so2_ppb"]),
@@ -209,7 +209,7 @@ def unchanged_prediction_data():
                 prediction_data.append({
                     "lat": float(row["lat"]),
                     "lon": float(row["lon"]),
-                    "year": int(row["year"]),
+                    "year": int(float(row["year"])),
                     "no2_ppb": float(row["no2_ppb"]),
                     "co_ppb": float(row["co_ppb"]),
                     "so2_ppb": float(row["so2_ppb"]),
@@ -248,17 +248,24 @@ def predict():
         df = pd.read_csv('air_quality/all_data_changed.csv')
 
         for item in data:
+            
+            print(item)
             sw = item['southWest']
             ne = item['northEast']
             color = item['color']
             print("color", color)
 
+            sw_lat, sw_lon = sw
+            ne_lat, ne_lon = ne
+
             mask = (
-                (df['lat'] >= sw['lat']) & (df['lat'] <= ne['lat']) &
-                (df['lon'] >= sw['lon']) & (df['lon'] <= ne['lon'])
+                (df['lat'] >= sw_lat) & (df['lat'] <= ne_lat) &
+                (df['lon'] >= sw_lon) & (df['lon'] <= ne_lon)
             )
             
+            print(mask)
             matched_indexes = df[mask].index.tolist()
+            print(matched_indexes)
             changed_indexes.update(matched_indexes)
             
             if color=='red':
@@ -282,7 +289,7 @@ def predict():
         for idx in changed_indexes:
             try:
                 row = df.loc[idx]
-                input_data = row[features].values.reshape(1, -1)
+                input_data = row[features].to_frame().T 
 
                 for pollutant in air_pollutants:
                     model = dict_models.get(pollutant)
