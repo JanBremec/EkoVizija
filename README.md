@@ -49,6 +49,20 @@ cd EkoVizija
 pip install -r requirements.txt
 ```
 
+3. **Add required files**
+In the folder *models* add the folowing files:
+- model_ch4_ppb.joblib
+- model_co_ppb.joblib
+- model_no2_ppb.joblib
+- model_o3_ppb.joblib
+- model_so2_ppb.joblib
+
+In the folder *air_quality* add the following files:
+- all_data.csv
+- all_data_changed.csv
+
+The files are available on 10.5281/zenodo.15207219
+
 ---
 
 ## 🧪 Running the Project
