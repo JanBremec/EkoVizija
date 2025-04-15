@@ -70,10 +70,8 @@ The files are available on doi [10.5281/zenodo.15207219](https://zenodo.org/reco
 Once everything is installed, you can start the app with:
 
 ```bash
-python main.py
+python backend.py
 ```
-
-> Replace `main.py` with your actual entry point if it’s different.
 
 Visit `http://127.0.0.1:5000` in your browser to start exploring EKOVIZIJA!
 
