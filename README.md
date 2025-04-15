@@ -61,7 +61,7 @@ In the folder *air_quality* add the following files:
 - all_data.csv
 - all_data_changed.csv
 
-The files are available on 10.5281/zenodo.15207219
+The files are available on doi [10.5281/zenodo.15207219](https://zenodo.org/records/15207219)
 
 ---
 
